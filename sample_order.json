@@ -1,0 +1,64 @@
+{
+  "order": {
+    "orderId": "ORD123456789",
+    "orderDate": "2025-03-03T12:00:00Z",
+    "customer": {
+      "accountType": "Professional",
+      "companyName": "Contoso",
+      "contactPerson": {
+        "firstName": "Jean",
+        "lastName": "Dupont",
+        "email": "j.dupont@contoso.com",
+        "jobTitle": "IT Manager"
+      },
+      "billingAddress": {
+        "street": "456 Rue de l'Innovation",
+        "city": "Contoso City",
+        "postalCode": "99999",
+        "country": "France"
+      }
+    },
+    "contractDetails": {
+      "contractId": "CONT-1234",
+      "servicePlan": "Fiber Pro Ultra",
+      "commitmentPeriod": "12",
+      "monthlyFee": 49.99
+    },
+    "product": {
+      "type": "Router",
+      "model": "Pro Router",
+      "version": "V5",
+      "features": [
+        "4 Ethernet ports",
+        "VoIP capability",
+        "Remote management",
+        "Advanced firewall"
+      ],
+      "quantity": 1,
+      "unitPrice": 199.00
+    },
+    "delivery": {
+      "method": "Express Courier",
+      "trackingNumber": "TR123456789FR",
+      "estimatedDeliveryDate": "2025-03-07T09:00:00Z",
+      "deliveryAddress": {
+        "street": "456 Rue de l'Innovation",
+        "city": "Contoso City",
+        "postalCode": "99999",
+        "country": "France"
+      },
+      "specialInstructions": "Livraison à l'accueil, demander le service informatique"
+    },
+    "payment": {
+      "method": "Corporate Account",
+      "poNumber": "PO-12345",
+      "totalPrice": 199.00,
+      "installationFee": 49.00,
+      "discount": {
+        "type": "Loyalty",
+        "amount": 50.00,
+        "description": "Client fidèle depuis plus de 5 ans"
+      }
+    }
+  }
+}
