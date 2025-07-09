@@ -1,0 +1,8 @@
+{
+  "logicApp": "logic-",
+  "insightsComponents": "appi-",
+  "storageAccountWorkflows": "staflow",
+  "logAnalyticsWorkspaces": "log-",
+  "serviceBusNamespace": "sb-",
+  "apiManagementService": "apim-"
+}

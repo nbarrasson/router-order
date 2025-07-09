@@ -1,0 +1,275 @@
+{
+  "definition": {
+    "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+    "actions": {
+      "Send_message": {
+        "type": "ServiceProvider",
+        "inputs": {
+          "parameters": {
+            "entityName": "topic-customer-orders",
+            "message": {
+              "contentData": "@triggerBody()"
+            }
+          },
+          "serviceProviderConfiguration": {
+            "connectionName": "serviceBus",
+            "operationId": "sendMessage",
+            "serviceProviderId": "/serviceProviders/serviceBus"
+          }
+        },
+        "runAfter": {}
+      }
+    },
+    "contentVersion": "1.0.0.0",
+    "outputs": {},
+    "triggers": {
+      "When_a_HTTP_request_is_received": {
+        "type": "Request",
+        "kind": "Http",
+        "inputs": {
+          "method": "POST",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "order": {
+                "type": "object",
+                "properties": {
+                  "orderId": {
+                    "type": "string"
+                  },
+                  "orderDate": {
+                    "type": "string"
+                  },
+                  "customer": {
+                    "type": "object",
+                    "properties": {
+                      "accountType": {
+                        "type": "string"
+                      },
+                      "companyName": {
+                        "type": "string"
+                      },
+                      "contactPerson": {
+                        "type": "object",
+                        "properties": {
+                          "firstName": {
+                            "type": "string"
+                          },
+                          "lastName": {
+                            "type": "string"
+                          },
+                          "email": {
+                            "type": "string"
+                          },
+                          "jobTitle": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "firstName",
+                          "lastName",
+                          "email",
+                          "jobTitle"
+                        ]
+                      },
+                      "billingAddress": {
+                        "type": "object",
+                        "properties": {
+                          "street": {
+                            "type": "string"
+                          },
+                          "city": {
+                            "type": "string"
+                          },
+                          "postalCode": {
+                            "type": "string"
+                          },
+                          "country": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "street",
+                          "city",
+                          "postalCode",
+                          "country"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "accountType",
+                      "companyName",
+                      "contactPerson",
+                      "billingAddress"
+                    ]
+                  },
+                  "contractDetails": {
+                    "type": "object",
+                    "properties": {
+                      "contractId": {
+                        "type": "string"
+                      },
+                      "servicePlan": {
+                        "type": "string"
+                      },
+                      "commitmentPeriod": {
+                        "type": "string"
+                      },
+                      "monthlyFee": {
+                        "type": "number"
+                      }
+                    },
+                    "required": [
+                      "contractId",
+                      "servicePlan",
+                      "commitmentPeriod",
+                      "monthlyFee"
+                    ]
+                  },
+                  "product": {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string"
+                      },
+                      "model": {
+                        "type": "string"
+                      },
+                      "version": {
+                        "type": "string"
+                      },
+                      "features": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "quantity": {
+                        "type": "integer"
+                      },
+                      "unitPrice": {
+                        "type": "integer"
+                      }
+                    },
+                    "required": [
+                      "type",
+                      "model",
+                      "version",
+                      "features",
+                      "quantity",
+                      "unitPrice"
+                    ]
+                  },
+                  "delivery": {
+                    "type": "object",
+                    "properties": {
+                      "method": {
+                        "type": "string"
+                      },
+                      "trackingNumber": {
+                        "type": "string"
+                      },
+                      "estimatedDeliveryDate": {
+                        "type": "string"
+                      },
+                      "deliveryAddress": {
+                        "type": "object",
+                        "properties": {
+                          "street": {
+                            "type": "string"
+                          },
+                          "city": {
+                            "type": "string"
+                          },
+                          "postalCode": {
+                            "type": "string"
+                          },
+                          "country": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "street",
+                          "city",
+                          "postalCode",
+                          "country"
+                        ]
+                      },
+                      "deliveryInstructions": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "method",
+                      "trackingNumber",
+                      "estimatedDeliveryDate",
+                      "deliveryAddress",
+                      "deliveryInstructions"
+                    ]
+                  },
+                  "payment": {
+                    "type": "object",
+                    "properties": {
+                      "method": {
+                        "type": "string"
+                      },
+                      "poNumber": {
+                        "type": "string"
+                      },
+                      "totalPrice": {
+                        "type": "integer"
+                      },
+                      "installationFee": {
+                        "type": "integer"
+                      },
+                      "discount": {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string"
+                          },
+                          "amount": {
+                            "type": "integer"
+                          },
+                          "description": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "type",
+                          "amount",
+                          "description"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "method",
+                      "poNumber",
+                      "totalPrice",
+                      "installationFee",
+                      "discount"
+                    ]
+                  }
+                },
+                "required": [
+                  "orderId",
+                  "orderDate",
+                  "customer",
+                  "contractDetails",
+                  "product",
+                  "delivery",
+                  "payment"
+                ]
+              }
+            },
+            "required": [
+              "order"
+            ]
+          }
+        },
+        "operationOptions": "EnableSchemaValidation"
+      }
+    }
+  },
+  "kind": "Stateful"
+}

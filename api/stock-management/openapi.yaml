@@ -1,0 +1,79 @@
+openapi: 3.1.0
+info:
+  title: Stock Management
+  description: ''
+  version: '1.0'
+paths:
+  /router-stock:
+    get:
+      summary: Get router stock
+      description: Get router stock status
+      operationId: get-router-stock
+      parameters:
+        - name: model
+          in: query
+          required: true
+          schema:
+            type: string
+          example: Pro Router V5
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Stock_Status_Response'
+              example:
+                inventory:
+                  lastUpdated: '[LAST_UPDATED]'
+                  items:
+                    - model: Pro Router V5
+                      quantity: 0
+                      status: Out of Stock
+components:
+  schemas:
+    Stock_Status_Request:
+      type: object
+      properties:
+        model:
+          type: string
+          description: The router model to check stock for
+      required:
+        - model
+      x-apim-schema-name: Stock Status Request
+    Stock_Status_Response:
+      type: object
+      properties:
+        inventory:
+          type: object
+          properties:
+            lastUpdated:
+              type: string
+            items:
+              type: array
+              items:
+                required:
+                  - model
+                  - quantity
+                  - status
+                type: object
+                properties:
+                  model:
+                    type: string
+                  quantity:
+                    type: integer
+                  status:
+                    type: string
+      x-apim-schema-name: Stock Status Response
+  securitySchemes:
+    apiKeyHeader:
+      type: apiKey
+      name: Ocp-Apim-Subscription-Key
+      in: header
+    apiKeyQuery:
+      type: apiKey
+      name: subscription-key
+      in: query
+security:
+  - apiKeyHeader: [ ]
+  - apiKeyQuery: [ ]

@@ -1,0 +1,326 @@
+{
+  "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "actions": {
+          "Parse_order_message": {
+              "type": "ParseJson",
+              "inputs": {
+                  "content": "@triggerBody()?['contentData']",
+                  "schema": {
+                      "type": "object",
+                      "properties": {
+                          "order": {
+                              "type": "object",
+                              "properties": {
+                                  "orderId": {
+                                      "type": "string"
+                                  },
+                                  "orderDate": {
+                                      "type": "string"
+                                  },
+                                  "customer": {
+                                      "type": "object",
+                                      "properties": {
+                                          "accountType": {
+                                              "type": "string"
+                                          },
+                                          "companyName": {
+                                              "type": "string"
+                                          },
+                                          "contactPerson": {
+                                              "type": "object",
+                                              "properties": {
+                                                  "firstName": {
+                                                      "type": "string"
+                                                  },
+                                                  "lastName": {
+                                                      "type": "string"
+                                                  },
+                                                  "email": {
+                                                      "type": "string"
+                                                  },
+                                                  "jobTitle": {
+                                                      "type": "string"
+                                                  }
+                                              }
+                                          },
+                                          "billingAddress": {
+                                              "type": "object",
+                                              "properties": {
+                                                  "street": {
+                                                      "type": "string"
+                                                  },
+                                                  "city": {
+                                                      "type": "string"
+                                                  },
+                                                  "postalCode": {
+                                                      "type": "string"
+                                                  },
+                                                  "country": {
+                                                      "type": "string"
+                                                  }
+                                              }
+                                          }
+                                      }
+                                  },
+                                  "contractDetails": {
+                                      "type": "object",
+                                      "properties": {
+                                          "contractId": {
+                                              "type": "string"
+                                          },
+                                          "servicePlan": {
+                                              "type": "string"
+                                          },
+                                          "commitmentPeriod": {
+                                              "type": "string"
+                                          },
+                                          "monthlyFee": {
+                                              "type": "number"
+                                          }
+                                      }
+                                  },
+                                  "product": {
+                                      "type": "object",
+                                      "properties": {
+                                          "type": {
+                                              "type": "string"
+                                          },
+                                          "model": {
+                                              "type": "string"
+                                          },
+                                          "version": {
+                                              "type": "string"
+                                          },
+                                          "features": {
+                                              "type": "array",
+                                              "items": {
+                                                  "type": "string"
+                                              }
+                                          },
+                                          "quantity": {
+                                              "type": "integer"
+                                          },
+                                          "unitPrice": {
+                                              "type": "integer"
+                                          }
+                                      }
+                                  },
+                                  "delivery": {
+                                      "type": "object",
+                                      "properties": {
+                                          "method": {
+                                              "type": "string"
+                                          },
+                                          "trackingNumber": {
+                                              "type": "string"
+                                          },
+                                          "estimatedDeliveryDate": {
+                                              "type": "string"
+                                          },
+                                          "deliveryAddress": {
+                                              "type": "object",
+                                              "properties": {
+                                                  "street": {
+                                                      "type": "string"
+                                                  },
+                                                  "city": {
+                                                      "type": "string"
+                                                  },
+                                                  "postalCode": {
+                                                      "type": "string"
+                                                  },
+                                                  "country": {
+                                                      "type": "string"
+                                                  }
+                                              }
+                                          },
+                                          "deliveryInstructions": {
+                                              "type": "string"
+                                          }
+                                      }
+                                  },
+                                  "payment": {
+                                      "type": "object",
+                                      "properties": {
+                                          "method": {
+                                              "type": "string"
+                                          },
+                                          "poNumber": {
+                                              "type": "string"
+                                          },
+                                          "totalPrice": {
+                                              "type": "integer"
+                                          },
+                                          "installationFee": {
+                                              "type": "integer"
+                                          },
+                                          "discount": {
+                                              "type": "object",
+                                              "properties": {
+                                                  "type": {
+                                                      "type": "string"
+                                                  },
+                                                  "amount": {
+                                                      "type": "integer"
+                                                  },
+                                                  "description": {
+                                                      "type": "string"
+                                                  }
+                                              }
+                                          }
+                                      }
+                                  }
+                              }
+                          }
+                      }
+                  }
+              },
+              "runAfter": {}
+          },
+          "JSON_to_XML": {
+              "type": "Compose",
+              "inputs": "@xml(json(triggerBody()?['contentData']))",
+              "runAfter": {
+                  "Call_an_Azure_API_Management_API": [
+                      "SUCCEEDED"
+                  ]
+              }
+          },
+          "Transform_XML": {
+              "type": "Xslt",
+              "inputs": {
+                  "content": "@outputs('JSON_to_XML')",
+                  "map": {
+                      "source": "LogicApp",
+                      "name": "transformation_router.xslt"
+                  }
+              },
+              "runAfter": {
+                  "JSON_to_XML": [
+                      "SUCCEEDED"
+                  ]
+              }
+          },
+          "XML_to_JSON": {
+              "type": "Compose",
+              "inputs": "@json(body('Transform_XML'))",
+              "runAfter": {
+                  "Transform_XML": [
+                      "SUCCEEDED"
+                  ]
+              }
+          },
+          "For_each": {
+              "type": "foreach",
+              "foreach": "@body('Call_an_Azure_API_Management_API')?['inventory']?['items']",
+              "actions": {
+                  "If_router_is_in_stock": {
+                      "type": "If",
+                      "expression": {
+                          "and": [
+                              {
+                                  "equals": [
+                                      "@item()?['status']",
+                                      "In Stock"
+                                  ]
+                              }
+                          ]
+                      },
+                      "actions": {
+                          "Send_message_with_instock_true": {
+                              "type": "ServiceProvider",
+                              "inputs": {
+                                  "parameters": {
+                                      "entityName": "topic-router-orders",
+                                      "message": {
+                                          "contentData": "@outputs('XML_to_JSON')",
+                                          "userProperties": {
+                                              "instock": "true"
+                                          }
+                                      }
+                                  },
+                                  "serviceProviderConfiguration": {
+                                      "connectionName": "serviceBus",
+                                      "operationId": "sendMessage",
+                                      "serviceProviderId": "/serviceProviders/serviceBus"
+                                  }
+                              }
+                          }
+                      },
+                      "else": {
+                          "actions": {
+                              "Send_message_with_instock_false": {
+                                  "type": "ServiceProvider",
+                                  "inputs": {
+                                      "parameters": {
+                                          "entityName": "topic-router-orders",
+                                          "message": {
+                                              "contentData": "@outputs('XML_to_JSON')",
+                                              "userProperties": {
+                                                  "instock": "false"
+                                              }
+                                          }
+                                      },
+                                      "serviceProviderConfiguration": {
+                                          "connectionName": "serviceBus",
+                                          "operationId": "sendMessage",
+                                          "serviceProviderId": "/serviceProviders/serviceBus"
+                                      }
+                                  }
+                              }
+                          }
+                      }
+                  }
+              },
+              "runAfter": {
+                  "XML_to_JSON": [
+                      "SUCCEEDED"
+                  ]
+              }
+          },
+          "Call_an_Azure_API_Management_API": {
+              "type": "ApiManagement",
+              "inputs": {
+                  "apiManagement": {
+                      "operationId": "get-router-stock",
+                      "connection": "apiManagementOperation"
+                  },
+                  "method": "get",
+                  "pathTemplate": {
+                      "template": "/router-stock"
+                  },
+                  "queries": {
+                      "model": "@concat(body('Parse_order_message')?['order']?['product']?['model'], ' ', body('Parse_order_message')?['order']?['product']?['version'])"
+                  }
+              },
+              "runAfter": {
+                  "Parse_order_message": [
+                      "SUCCEEDED"
+                  ]
+              }
+          }
+      },
+      "contentVersion": "1.0.0.0",
+      "outputs": {},
+      "triggers": {
+          "When_messages_are_available_in_a_topic": {
+              "type": "ServiceProvider",
+              "inputs": {
+                  "parameters": {
+                      "topicName": "topic-customer-orders",
+                      "subscriptionName": "sub-order-stock",
+                      "isSessionsEnabled": false
+                  },
+                  "serviceProviderConfiguration": {
+                      "connectionName": "serviceBus",
+                      "operationId": "receiveTopicMessages",
+                      "serviceProviderId": "/serviceProviders/serviceBus"
+                  }
+              },
+              "splitOn": "@triggerOutputs()?['body']"
+          }
+      }
+  },
+  "kind": "Stateful"
+}

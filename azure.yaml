@@ -1,0 +1,14 @@
+name: router-order
+metadata:
+  template: router-order@0.0.1-beta
+infra:
+  provider: bicep
+  path: infra
+  module: main.bicep
+hooks:
+  postprovision:
+    windows:
+      shell: pwsh
+      run: scripts/postprovision.ps1
+      interactive: true
+      continueOnError: false

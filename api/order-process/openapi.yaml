@@ -1,0 +1,194 @@
+openapi: 3.0.1
+info:
+  title: Order Process API
+  version: '1.0'
+paths:
+  /wf_orders_from_http_to_sb/triggers/When_a_HTTP_request_is_received/invoke:
+    post:
+      summary: Process Order
+      description: Process an order through the system
+      operationId: process-order
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Order_Process_Request'
+            example:
+              order:
+                orderId: "[ORDER_ID]"
+                orderDate: '[ORDER_DATE]'
+                customer:
+                  accountType: Professional
+                  companyName: "[COMPANY_NAME]"
+                  contactPerson:
+                    firstName: "[FIRST_NAME]"
+                    lastName: "[LAST_NAME]"
+                    email: "[EMAIL]"
+                    jobTitle: "[JOB_TITLE]"
+                  billingAddress:
+                    street: "[STREET]"
+                    city: "[CITY]"
+                    postalCode: "[POSTAL_CODE]"
+                    country: "[COUNTRY]"
+                contractDetails:
+                  contractId: "[CONTRACT_ID]"
+                  servicePlan: "Fiber Pro Ultra"
+                  commitmentPeriod: '12'
+                  monthlyFee: 49.99
+                product:
+                  type: Router
+                  model: Pro Router
+                  version: V5
+                  features:
+                    - 4 Ethernet ports
+                    - VoIP capability
+                    - Remote management
+                    - Advanced firewall
+                  quantity: 1
+                  unitPrice: 199
+                delivery:
+                  method: Express Courier
+                  trackingNumber: "[TRACKING_NUMBER]"
+                  estimatedDeliveryDate: '[ESTIMATED_DELIVERY_DATE]'
+                  deliveryAddress:
+                    street: "[STREET]"
+                    city: "[CITY]"
+                    postalCode: "[POSTAL_CODE]"
+                    country: "[COUNTRY]"
+                  deliveryInstructions: "[DELIVERY_INSTRUCTIONS]"
+                payment:
+                  method: Corporate Account
+                  poNumber: "[PO_NUMBER]"
+                  totalPrice: 199
+                  installationFee: 49
+                  discount:
+                    type: Loyalty
+                    amount: 50
+                    description: "[DESCRIPTION]"
+      responses:
+        '200':
+          description: ''
+components:
+  schemas:
+    Order_Process_Request:
+      type: object
+      properties:
+        order:
+          type: object
+          properties:
+            orderId:
+              type: string
+            orderDate:
+              type: string
+            customer:
+              type: object
+              properties:
+                accountType:
+                  type: string
+                companyName:
+                  type: string
+                contactPerson:
+                  type: object
+                  properties:
+                    firstName:
+                      type: string
+                    lastName:
+                      type: string
+                    email:
+                      type: string
+                    jobTitle:
+                      type: string
+                billingAddress:
+                  type: object
+                  properties:
+                    street:
+                      type: string
+                    city:
+                      type: string
+                    postalCode:
+                      type: string
+                    country:
+                      type: string
+            contractDetails:
+              type: object
+              properties:
+                contractId:
+                  type: string
+                servicePlan:
+                  type: string
+                commitmentPeriod:
+                  type: string
+                monthlyFee:
+                  type: number
+            product:
+              type: object
+              properties:
+                type:
+                  type: string
+                model:
+                  type: string
+                version:
+                  type: string
+                features:
+                  type: array
+                  items:
+                    type: string
+                quantity:
+                  type: integer
+                unitPrice:
+                  type: integer
+            delivery:
+              type: object
+              properties:
+                method:
+                  type: string
+                trackingNumber:
+                  type: string
+                estimatedDeliveryDate:
+                  type: string
+                deliveryAddress:
+                  type: object
+                  properties:
+                    street:
+                      type: string
+                    city:
+                      type: string
+                    postalCode:
+                      type: string
+                    country:
+                      type: string
+                deliveryInstructions:
+                  type: string
+            payment:
+              type: object
+              properties:
+                method:
+                  type: string
+                poNumber:
+                  type: string
+                totalPrice:
+                  type: integer
+                installationFee:
+                  type: integer
+                discount:
+                  type: object
+                  properties:
+                    type:
+                      type: string
+                    amount:
+                      type: integer
+                    description:
+                      type: string
+      x-apim-schema-name: Order Process Request
+  securitySchemes:
+    apiKeyHeader:
+      type: apiKey
+      name: Ocp-Apim-Subscription-Key
+      in: header
+    apiKeyQuery:
+      type: apiKey
+      name: subscription-key
+      in: query
+security:
+  - apiKeyHeader: [ ]
+  - apiKeyQuery: [ ]

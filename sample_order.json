@@ -1,0 +1,64 @@
+{
+  "order": {
+    "orderId": "[ORDER_ID]",
+    "orderDate": "[ORDER_DATE]",
+    "customer": {
+      "accountType": "Professional",
+      "companyName": "[COMPANY_NAME]",
+      "contactPerson": {
+        "firstName": "[FIRST_NAME]",
+        "lastName": "[LAST_NAME]",
+        "email": "[EMAIL]",
+        "jobTitle": "[JOB_TITLE]"
+      },
+      "billingAddress": {
+        "street": "[STREET]",
+        "city": "[CITY]",
+        "postalCode": "[POSTAL_CODE]",
+        "country": "[COUNTRY]"
+      }
+    },
+    "contractDetails": {
+      "contractId": "[CONTRACT_ID]",
+      "servicePlan": "Fiber Pro Ultra",
+      "commitmentPeriod": "12",
+      "monthlyFee": 49.99
+    },
+    "product": {
+      "type": "Router",
+      "model": "Pro Router",
+      "version": "V5",
+      "features": [
+        "4 Ethernet ports",
+        "VoIP capability",
+        "Remote management",
+        "Advanced firewall"
+      ],
+      "quantity": 1,
+      "unitPrice": 199.00
+    },
+    "delivery": {
+      "method": "Express Courier",
+      "trackingNumber": "[TRACKING_NUMBER]",
+      "estimatedDeliveryDate": "[ESTIMATED_DELIVERY_DATE]",
+      "deliveryAddress": {
+        "street": "[STREET]",
+        "city": "[CITY]",
+        "postalCode": "[POSTAL_CODE]",
+        "country": "[COUNTRY]"
+      },
+      "deliveryInstructions": "[DELIVERY_INSTRUCTIONS]"
+    },
+    "payment": {
+      "method": "Corporate Account",
+      "poNumber": "[PO_NUMBER]",
+      "totalPrice": 199.00,
+      "installationFee": 49.00,
+      "discount": {
+        "type": "Loyalty",
+        "amount": 50.00,
+        "description": "[DESCRIPTION]"
+      }
+    }
+  }
+}
