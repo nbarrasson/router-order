@@ -4,7 +4,7 @@ metadata:
 infra:
   provider: bicep
   path: infra
-  module: main.bicep
+  module: main
 hooks:
   postprovision:
     windows:
